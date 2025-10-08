@@ -1,0 +1,19 @@
+# 建立虛擬環境
+1. 新建虛擬環境
+2. 啟用虛擬環境
+3. 安裝 OpenCV
+```PowerShell
+python -m venv opencv-env
+.\opencv-env\Scripts\Activate.ps1
+pip install opencv-python
+```
+
+# 取得虛擬環境路徑
+1. 啟用虛擬環境
+2. 取得虛擬環境路徑
+```
+.\opencv-env\Scripts\Activate.ps1
+$env:VIRTUAL_ENV
+```
+虛擬環境路徑:
+C:\Users\User\opencv-env
