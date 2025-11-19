@@ -1,4 +1,4 @@
-# edge detection 邊緣偵測
+# Canny edge detection 邊緣偵測
 
 import cv2
 import numpy as np
