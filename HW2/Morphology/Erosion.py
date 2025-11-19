@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 # Erosion function (binary image)
 def erosion(binary_img, kernel=None):
-    # # 預設值：3x3 正方形結構元素
+    # 預設值：3x3 正方形結構元素
     if kernel is None:
         kernel = np.ones((3, 3), dtype=np.uint8)
 

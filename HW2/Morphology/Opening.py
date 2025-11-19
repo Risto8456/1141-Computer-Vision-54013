@@ -5,10 +5,16 @@ import numpy as np
 import cv2 as cv
 import matplotlib.pyplot as plt
 
-# 匯入自製的 Erosion 與 Dilation
-from .Erosion import erosion
-from .Dilation import dilation
-
+# 兼容相對匯入與直接執行
+try:
+    from .Erosion import erosion
+    from .Dilation import dilation
+except Exception:
+    # 當直接以 python Closing.py 執行（__main__），相對匯入會失敗
+    # 此處回退到同資料夾的絕對匯入
+    from Erosion import erosion
+    from Dilation import dilation
+    
 # Opening function
 # 先侵蝕，再膨脹
 def opening(binary_img, kernel=None):
