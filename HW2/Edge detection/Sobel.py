@@ -1,5 +1,5 @@
 # Sobel edge detection 
-# Sobel 邊緣偵測，自製 Sobel
+# Sobel 邊緣偵測
 
 import os
 import cv2 as cv
