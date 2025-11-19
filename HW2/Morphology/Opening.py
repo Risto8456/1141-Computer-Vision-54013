@@ -14,7 +14,7 @@ except Exception:
     # 此處回退到同資料夾的絕對匯入
     from Erosion import erosion
     from Dilation import dilation
-    
+
 # Opening function
 # 先侵蝕，再膨脹
 def opening(binary_img, kernel=None):
@@ -47,6 +47,10 @@ def main():
     plt.title('Opening')
     plt.imshow(opened_img, cmap='gray')
     plt.axis('off')
+
+    # 儲存
+    save_path = os.path.join(cur_path, "Opening.jpg")
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
 
     plt.tight_layout()
     plt.show()

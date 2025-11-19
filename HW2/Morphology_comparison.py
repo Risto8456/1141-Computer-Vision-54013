@@ -29,17 +29,21 @@ def main():
     opened = opening(binary)
     closed = closing(binary)
 
-    # Plot 1 row × 5 columns
-    plt.figure(figsize=(20, 4))
+    # Plot 2 row × 3 columns
+    plt.figure(figsize=(10, 4))
 
     titles = ["Original", "Erosion", "Dilation", "Opening", "Closing"]
     images = [binary, eroded, dilated, opened, closed]
 
     for i, (title, img) in enumerate(zip(titles, images), 1):
-        plt.subplot(1, 5, i)
+        plt.subplot(2, 3, i)
         plt.title(title)
         plt.imshow(img, cmap='gray')
         plt.axis('off')
+
+    # 儲存
+    save_path = os.path.join(cur_path, "Morphology_comparison.jpg")
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
 
     plt.tight_layout()
     plt.show()

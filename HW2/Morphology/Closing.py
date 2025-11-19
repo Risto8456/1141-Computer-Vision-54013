@@ -49,6 +49,10 @@ def main():
     plt.imshow(closed, cmap='gray')
     plt.axis('off')
 
+    # 儲存
+    save_path = os.path.join(cur_path, "Closing.jpg")
+    plt.savefig(save_path, dpi=300, bbox_inches='tight')
+
     plt.tight_layout()
     plt.show()
 
