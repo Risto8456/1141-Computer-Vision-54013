@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./HW2",
+        "./HW2"
+    ]
+}
