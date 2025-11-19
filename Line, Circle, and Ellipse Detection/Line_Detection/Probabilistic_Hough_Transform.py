@@ -4,7 +4,6 @@
 import matplotlib.pyplot as plt
 from skimage import data
 import cv2
-import math
 import numpy as np
 
 src = data.camera()

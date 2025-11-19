@@ -103,3 +103,9 @@ if __name__ == "__main__":
     gray_img = cv.cvtColor(color_img, cv.COLOR_BGR2GRAY)
 
     Prewitt_edge_detection_test(gray_img)
+
+    # Prewitt kernel
+    # print(generate_prewitt_kernel(3)[0])
+    # print(generate_prewitt_kernel(5)[0])
+    # print(generate_prewitt_kernel(7)[0])
+    # print(generate_prewitt_kernel(9)[0])
