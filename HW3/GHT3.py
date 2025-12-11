@@ -22,33 +22,50 @@ temp_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
 ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 
 # ==========================================================
-# 1.5 (選填) 精準旋轉 Reference 影像（自動擴張避免裁切）
+# 1.5 (選填) Reference 影像前處理：縮放 + 旋轉（無裁切）
 # ==========================================================
-pre_rotate_angle = 30  # <-- 設定角度
 
+# ---- 可調參數 ----
+scale_factor = 5.0   # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放
+pre_rotate_angle = 30 # 旋轉角度（度）0 表示不旋轉
+
+# ---- Step 1：影像縮放（不強制）----
+if scale_factor != 1.0:
+    if not (0.1 <= scale_factor <= 10.0):
+        raise ValueError("縮放倍率必須在 0.1 ~ 10 之間")
+
+    new_w = int(reference.shape[1] * scale_factor)
+    new_h = int(reference.shape[0] * scale_factor)
+
+    reference = cv2.resize(reference, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
+    ref_gray = cv2.resize(ref_gray, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
+
+    print(f"[1.5] Reference 已縮放倍率：{scale_factor}")
+else:
+    print("[1.5] Reference 未縮放")
+
+# ---- Step 2：旋轉（自動擴張畫布，避免裁切）----
 if pre_rotate_angle != 0:
     angle = np.radians(pre_rotate_angle)
     (h, w) = ref_gray.shape
 
-    # 計算旋轉後 bounding box 尺寸
+    # 計算旋轉後能完整容納的 bounding box（不縮放內容）
     new_w = int(abs(w*np.cos(angle)) + abs(h*np.sin(angle)))
     new_h = int(abs(w*np.sin(angle)) + abs(h*np.cos(angle)))
 
-    # 產生旋轉矩陣（注意要把中心移到新大小中）
+    # 旋轉矩陣以原中心為基準（但輸出 canvas 是新的）
     M = cv2.getRotationMatrix2D((w/2, h/2), pre_rotate_angle, 1.0)
 
-    # 平移修正（避免裁切）
+    # 平移補償：把內容移到新 canvas 的中心
     M[0, 2] += (new_w - w) / 2
     M[1, 2] += (new_h - h) / 2
 
-    # 執行旋轉
     reference = cv2.warpAffine(reference, M, (new_w, new_h), flags=cv2.INTER_LINEAR)
     ref_gray = cv2.warpAffine(ref_gray, M, (new_w, new_h), flags=cv2.INTER_LINEAR)
 
-    print(f"[1.5] Reference 已精準旋轉 {pre_rotate_angle} 度（無裁切）")
+    print(f"[1.5] Reference 已旋轉 {pre_rotate_angle} 度（自動擴張避免裁切）")
 else:
     print("[1.5] Reference 未旋轉")
-
 
 # ==========================================================
 # 2. Canny 邊緣 + Sobel 計算梯度方向
@@ -71,7 +88,7 @@ ref_dir  = gradient_direction(ref_gray)
 h, w = temp_edges.shape
 xc, yc = w // 2, h // 2  # 範本中心
 
-NBINS = 60  # 方向量化數（template edge orientation bins）
+NBINS = 360  # 方向量化數（template edge orientation bins）
 def quantize_angle(theta, nbins=NBINS):
     # theta ∈ (-pi, pi) -> 0..nbins-1
     bin_id = int(((theta + np.pi) / (2*np.pi)) * nbins)
@@ -101,7 +118,7 @@ print("R-table 建立完成，範本邊緣點數：", len(xs_t))
 H, W = ref_edges.shape
 
 # Rotation bins: 要檢查的離散旋轉角度（弧度）
-N_ROT = 36
+N_ROT = 360
 rot_angles = np.linspace(-np.pi, np.pi, N_ROT, endpoint=False)
 
 # 3D accumulator: (H, W, N_ROT)
@@ -187,7 +204,7 @@ cv2.polylines(output, [pts], isClosed=True, color=(0, 255, 0), thickness=1)
 
 # 在中心畫一個小圓點，並顯示角度
 cv2.circle(output, (cx, cy), 3, (0, 0, 255), -1)
-angle_text = f"{int(np.round(np.degrees(best_angle)))}deg"
+angle_text = f"{int(np.degrees(best_angle))}deg"
 cv2.putText(output, angle_text, (cx+5, cy-5), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0,0,255), 1, cv2.LINE_AA)
 
 plt.figure(figsize=(10, 8))
