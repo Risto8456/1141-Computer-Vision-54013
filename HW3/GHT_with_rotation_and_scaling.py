@@ -26,8 +26,8 @@ ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 # ==========================================================
 
 # ---- 可調參數 ----
-scale_factor = 0.5    # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放
-pre_rotate_angle = 60 # 旋轉角度（度）0 表示不旋轉
+scale_factor = 1.2    # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放(目前固定[1.0, 0.8, 1.2])
+pre_rotate_angle = 45  # 旋轉角度（度）0 表示不旋轉
 
 # ---- Step 1：影像縮放（不強制）----
 if scale_factor != 1.0:
@@ -88,7 +88,7 @@ ref_dir  = gradient_direction(ref_gray)
 h, w = temp_edges.shape
 xc, yc = w // 2, h // 2  # 範本中心
 
-NBINS = 60  # 方向量化數（template edge orientation bins）
+NBINS = 120  # 方向量化數（template edge orientation bins）
 def quantize_angle(theta, nbins=NBINS):
     # theta ∈ (-pi, pi) -> 0..nbins-1
     bin_id = int(((theta + np.pi) / (2*np.pi)) * nbins)
@@ -118,7 +118,7 @@ print("R-table 建立完成，範本邊緣點數：", len(xs_t))
 H, W = ref_edges.shape
 
 # Rotation bins
-N_ROT = 36
+N_ROT = 120
 rot_angles = np.linspace(-np.pi, np.pi, N_ROT, endpoint=False)
 
 # Scale bins（假設要搜尋多個縮放倍率）

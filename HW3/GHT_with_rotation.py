@@ -24,7 +24,7 @@ ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 # ==========================================================
 # 1.5 (選填) 精準旋轉 Reference 影像（自動擴張避免裁切）
 # ==========================================================
-pre_rotate_angle = 30  # <-- 設定角度
+pre_rotate_angle = 45  # <-- 設定角度
 
 if pre_rotate_angle != 0:
     angle = np.radians(pre_rotate_angle)
@@ -71,7 +71,7 @@ ref_dir  = gradient_direction(ref_gray)
 h, w = temp_edges.shape
 xc, yc = w // 2, h // 2  # 範本中心
 
-NBINS = 60  # 方向量化數（template edge orientation bins）
+NBINS = 120  # 方向量化數（template edge orientation bins）
 def quantize_angle(theta, nbins=NBINS):
     # theta ∈ (-pi, pi) -> 0..nbins-1
     bin_id = int(((theta + np.pi) / (2*np.pi)) * nbins)
@@ -101,7 +101,7 @@ print("R-table 建立完成，範本邊緣點數：", len(xs_t))
 H, W = ref_edges.shape
 
 # Rotation bins: 要檢查的離散旋轉角度（弧度）
-N_ROT = 36
+N_ROT = 120
 rot_angles = np.linspace(-np.pi, np.pi, N_ROT, endpoint=False)
 
 # 3D accumulator: (H, W, N_ROT)

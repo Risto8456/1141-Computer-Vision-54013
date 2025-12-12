@@ -47,7 +47,7 @@ h, w = temp_edges.shape
 xc, yc = w // 2, h // 2
 
 # 方向量化
-NBINS = 60
+NBINS = 120
 def quantize_angle(theta):
     # theta ∈ (-pi, pi)
     bin = int(((theta + np.pi) / (2*np.pi)) * NBINS)
