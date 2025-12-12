@@ -10,6 +10,7 @@ pip install opencv-contrib-python
 pip install matplotlib
 pip install scikit-image
 pip install numpy pillow matplotlib scikit-learn PyMaxflow
+pip install tqdm
 ```
 
 # 取得虛擬環境路徑

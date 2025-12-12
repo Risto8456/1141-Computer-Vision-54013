@@ -4,6 +4,7 @@ import cv2
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm   # 進度條
 
 curr_fold = os.path.dirname(os.path.abspath(__file__))          # 目前資料夾
 temp_path = os.path.join(curr_fold, "data", "Template.png")     # 偵測物影像
@@ -130,7 +131,9 @@ accumulator = np.zeros((H, W, N_ROT, len(scale_factors)), dtype=np.int32)
 ys_r, xs_r = np.where(ref_edges > 0)
 print("Reference 邊緣點數：", len(xs_r), "，開始投票（含旋轉+縮放）...")
 
-for (x, y) in zip(xs_r, ys_r):
+for idx in tqdm(range(len(xs_r)), desc="投票中", ncols=80):
+    x = xs_r[idx]
+    y = ys_r[idx]
     phi_r = ref_dir[y, x]
 
     for ridx, psi in enumerate(rot_angles):
@@ -143,8 +146,8 @@ for (x, y) in zip(xs_r, ys_r):
 
         for sidx, s in enumerate(scale_factors):
             for (r, alpha) in entries:
-                r_scaled = r * s               # 將範本半徑放大或縮小
-                alpha_rot = alpha + psi        # 旋轉向量
+                r_scaled = r * s
+                alpha_rot = alpha + psi
                 xc_hat = int(round(x + r_scaled * np.cos(alpha_rot)))
                 yc_hat = int(round(y + r_scaled * np.sin(alpha_rot)))
 

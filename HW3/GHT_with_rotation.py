@@ -4,6 +4,7 @@ import cv2
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm   # 進度條
 
 curr_fold = os.path.dirname(os.path.abspath(__file__))          # 目前資料夾
 temp_path = os.path.join(curr_fold, "data", "Template.png")     # 偵測物影像
@@ -108,18 +109,20 @@ rot_angles = np.linspace(-np.pi, np.pi, N_ROT, endpoint=False)
 accumulator = np.zeros((H, W, N_ROT), dtype=np.int32)
 
 ys_r, xs_r = np.where(ref_edges > 0)
-print("Reference 邊緣點數：", len(xs_r), "，開始投票（含旋轉）...")
+num_ref_edges = len(xs_r)
+print("Reference 邊緣點數:", num_ref_edges, "開始投票（含旋轉）...")
 
-# 為效率：預先計算 cos/sin 的小表
+# 預先計算 cos/sin
 cos_rot = np.cos(rot_angles)
 sin_rot = np.sin(rot_angles)
 
-# 投票流程：對每個 reference edge，對每個 rotation bin 計算對應的 template bin，並投票
-for (x, y) in zip(xs_r, ys_r):
-    phi_r = ref_dir[y, x]  # edge direction at reference
+# tqdm 進度條（外層）
+for (x, y, phi_r) in tqdm(zip(xs_r, ys_r, ref_dir[ys_r, xs_r]),
+                           total=num_ref_edges,
+                           desc="Voting (ref edges)",
+                           ncols=80):
 
-    # 對每個離散旋轉角 psi，找出對應要檢查的 template orientation bin
-    # phi_t_needed = phi_r - psi  => bin_t = quantize(phi_r - psi)
+    # 每個離散旋轉角 psi
     for ridx, psi in enumerate(rot_angles):
         phi_t_needed = phi_r - psi
         bin_t = quantize_angle(phi_t_needed)
@@ -128,8 +131,7 @@ for (x, y) in zip(xs_r, ys_r):
         if not entries:
             continue
 
-        # 對該bin裡的每個 (r, alpha) 做旋轉並投票
-        # 將 alpha 旋轉 psi (alpha' = alpha + psi), centre = (x + r*cos(alpha'), y + r*sin(alpha'))
+        # entries: 多筆 (r, alpha)
         for (r, alpha) in entries:
             alpha_rot = alpha + psi
             xc_hat = int(round(x + r * np.cos(alpha_rot)))
