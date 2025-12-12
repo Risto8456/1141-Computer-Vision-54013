@@ -5,9 +5,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-curr_fold = os.path.dirname(os.path.abspath(__file__))  # 目前資料夾
-temp_path = os.path.join(curr_fold, "Template.png")     # 偵測物影像
-ref_path = os.path.join(curr_fold, "Refernce.png")      # 待偵測影像
+curr_fold = os.path.dirname(os.path.abspath(__file__))          # 目前資料夾
+temp_path = os.path.join(curr_fold, "data", "Template.png")     # 偵測物影像
+ref_path = os.path.join(curr_fold, "data", "Refernce.png")      # 待偵測影像
 
 # ==========================================================
 # 1. 讀取影像(支援中文路徑)
@@ -26,8 +26,8 @@ ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 # ==========================================================
 
 # ---- 可調參數 ----
-scale_factor = 1.2   # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放
-pre_rotate_angle = 0 # 旋轉角度（度）0 表示不旋轉
+scale_factor = 0.5    # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放
+pre_rotate_angle = 60 # 旋轉角度（度）0 表示不旋轉
 
 # ---- Step 1：影像縮放（不強制）----
 if scale_factor != 1.0:
@@ -88,7 +88,7 @@ ref_dir  = gradient_direction(ref_gray)
 h, w = temp_edges.shape
 xc, yc = w // 2, h // 2  # 範本中心
 
-NBINS = 36  # 方向量化數（template edge orientation bins）
+NBINS = 60  # 方向量化數（template edge orientation bins）
 def quantize_angle(theta, nbins=NBINS):
     # theta ∈ (-pi, pi) -> 0..nbins-1
     bin_id = int(((theta + np.pi) / (2*np.pi)) * nbins)
@@ -209,4 +209,6 @@ plt.figure(figsize=(10, 8))
 plt.imshow(cv2.cvtColor(output, cv2.COLOR_BGR2RGB))
 plt.title("GHT with rotation + scale - Result")
 plt.axis("off")
+result_path = os.path.join(curr_fold, "result", f"scale{scale_factor}_angle{pre_rotate_angle}.png")     # 偵測結果路徑
+plt.savefig(result_path, bbox_inches='tight', pad_inches=0.1)
 plt.show()

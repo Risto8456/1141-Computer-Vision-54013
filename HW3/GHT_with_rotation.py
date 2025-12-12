@@ -5,9 +5,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-curr_fold = os.path.dirname(os.path.abspath(__file__))  # 目前資料夾
-temp_path = os.path.join(curr_fold, "Template.png")     # 偵測物影像
-ref_path = os.path.join(curr_fold, "Refernce.png")      # 待偵測影像
+curr_fold = os.path.dirname(os.path.abspath(__file__))          # 目前資料夾
+temp_path = os.path.join(curr_fold, "data", "Template.png")     # 偵測物影像
+ref_path = os.path.join(curr_fold, "data", "Refernce.png")      # 待偵測影像
 
 # ==========================================================
 # 1. 讀取影像(支援中文路徑)
@@ -194,4 +194,6 @@ plt.figure(figsize=(10, 8))
 plt.imshow(cv2.cvtColor(output, cv2.COLOR_BGR2RGB))
 plt.title("GHT with rotation - Result")
 plt.axis("off")
+result_path = os.path.join(curr_fold, "result", f"angle{pre_rotate_angle}.png")     # 偵測結果路徑
+plt.savefig(result_path, bbox_inches='tight', pad_inches=0.1)
 plt.show()
