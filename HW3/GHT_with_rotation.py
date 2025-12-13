@@ -189,7 +189,10 @@ cv2.polylines(output, [pts], isClosed=True, color=(0, 255, 0), thickness=1)
 
 # 在中心畫一個小圓點，並顯示角度
 cv2.circle(output, (cx, cy), 3, (0, 0, 255), -1)
-angle_text = f"{int(np.round(np.degrees(best_angle)))}deg"
+if (isinstance(pre_rotate_angle, int)):
+    angle_text = f"{int(np.round(np.degrees(best_angle)))}deg"
+else:
+    angle_text = f"{np.degrees(best_angle)}deg"
 cv2.putText(output, angle_text, (cx+5, cy-5), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0,0,255), 1, cv2.LINE_AA)
 
 plt.figure(figsize=(10, 8))
