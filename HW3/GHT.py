@@ -1,8 +1,7 @@
 # Object Detection 物體偵測
 # Generalized Hough Transform 廣義霍夫變換
 
-import cv2
-import os
+import cv2, os, time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -77,6 +76,9 @@ print("R-table 建立完成")
 H, W = ref_edges.shape
 accumulator = np.zeros((H, W), dtype=np.float32)
 
+# 記錄開始時間
+start_time = time.time()
+
 ys, xs = np.where(ref_edges > 0)
 for (x, y) in zip(xs, ys):
     phi = ref_dir[y, x]
@@ -94,9 +96,14 @@ for (x, y) in zip(xs, ys):
         if 0 <= xc_hat < W and 0 <= yc_hat < H:
             accumulator[yc_hat, xc_hat] += 1
 
+# 記錄結束時間
+end_time = time.time()
+# 計算耗時
+elapsed_time = end_time - start_time
+print(f"投票完成, 執行時間: {elapsed_time} 秒")
+
 # test
 # plt.imshow(cv2.cvtColor(accumulator, cv2.COLOR_BGR2RGB))
-print("投票完成")
 
 # ==========================================================
 # 5. 找出累加器最大值（偵測結果）
