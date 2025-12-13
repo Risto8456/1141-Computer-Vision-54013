@@ -27,13 +27,13 @@ ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 # ==========================================================
 
 # ---- 可調參數 ----
-scale_factor = 1.2    # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放(目前固定[1.0, 0.8, 1.2])
+scale_factor = 1.5     # 影像縮放倍率（0.5 ~ 1.5，間距為 0.1)，1.0 表示不縮放
 pre_rotate_angle = 45  # 旋轉角度（度）0 表示不旋轉
 
 # ---- Step 1：影像縮放（不強制）----
 if scale_factor != 1.0:
-    if not (0.1 <= scale_factor <= 10.0):
-        raise ValueError("縮放倍率必須在 0.1 ~ 10 之間")
+    if not (0.5 <= scale_factor <= 1.5):
+        raise ValueError("縮放倍率必須在 0.5 ~ 1.5 之間，間距為 0.1")
 
     new_w = int(reference.shape[1] * scale_factor)
     new_h = int(reference.shape[0] * scale_factor)
@@ -125,8 +125,8 @@ rot_angles = np.linspace(-np.pi, np.pi, N_ROT, endpoint=False)
 cos_rot = np.cos(rot_angles)
 sin_rot = np.sin(rot_angles)
 
-# Scale bins
-scale_factors = np.array([1.0, 0.8, 1.2], dtype=np.float32)
+# Scale bins, 由 0.5 到 1.5，間距為 0.1
+scale_factors = np.arange(0.5, 1.6, 0.1).astype(np.float32)  # shape: (11,)
 
 # 4D accumulator
 accumulator = np.zeros((H, W, N_ROT, scale_factors.size), dtype=np.int32)

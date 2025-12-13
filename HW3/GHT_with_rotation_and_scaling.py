@@ -27,13 +27,14 @@ ref_gray = cv2.cvtColor(reference, cv2.COLOR_BGR2GRAY)
 # ==========================================================
 
 # ---- 可調參數 ----
-scale_factor = 1.2    # 影像縮放倍率（0.1 ~ 10），1.0 表示不縮放(目前固定[1.0, 0.8, 1.2])
+scale_factor = 1.2    # 影像縮放倍率，1.0 表示不縮放
+scale_factors = [1.0, 0.8, 1.2]  # 提供倍率，可以自行修改(目前固定[1.0, 0.8, 1.2])
 pre_rotate_angle = 45  # 旋轉角度（度）0 表示不旋轉
 
 # ---- Step 1：影像縮放（不強制）----
 if scale_factor != 1.0:
-    if not (0.1 <= scale_factor <= 10.0):
-        raise ValueError("縮放倍率必須在 0.1 ~ 10 之間")
+    if scale_factor not in scale_factors:
+        raise ValueError(f"縮放倍率必須在 {scale_factors} 之間")
 
     new_w = int(reference.shape[1] * scale_factor)
     new_h = int(reference.shape[0] * scale_factor)
