@@ -1,29 +1,4 @@
-# 建立虛擬環境
-1. 新建虛擬環境
-2. 啟用虛擬環境
-3. 安裝 OpenCV
-```PowerShell
-python -m venv opencv-env
-.\opencv-env\Scripts\Activate.ps1
-pip install opencv-python
-pip install opencv-contrib-python
-pip install matplotlib
-pip install scikit-image
-pip install numpy pillow matplotlib scikit-learn PyMaxflow
-pip install tqdm
-```
-
-# 取得虛擬環境路徑
-1. 啟用虛擬環境
-2. 取得虛擬環境路徑
-```
-.\opencv-env\Scripts\Activate.ps1
-$env:VIRTUAL_ENV
-```
-虛擬環境路徑:
-C:\Users\User\opencv-env
-
-
+```cmd=
 conda create -n opencv-env python=3.12.7 -y
 conda activate opencv-env
 pip install numpy==2.2.6
@@ -32,3 +7,4 @@ pip install opencv-contrib-python==4.12.0.88
 pip install matplotlib==3.10.7
 pip install tqdm==4.67.1
 pip install pillow scikit-image scikit-learn PyMaxflow
+```
